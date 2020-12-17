@@ -1,0 +1,75 @@
+html
+  head
+    style
+      include ../style/style.css
+  body
+    div.frame    
+      div.login
+        h1 Blogger Spot 
+        p Welcome to BloggerSpot! 
+        input(type="text",id="email",placeholder="Email",class="email")
+        br
+        input(type="password",id="password",placeholder="Password",class="pass")
+        br
+        button(type='button',id = "loginBtn",value = 'login',class="login") Login
+        br
+        button(type='button',id = "RegBtn",value = 'Register',class="register") Create An Account
+        p#error
+  
+  script.
+
+    try{
+      if(localStorage.getItem("bloggingTokenStatus")==1)
+      {
+          window.location.href = '/'
+      }      
+    }catch(err)
+    {
+      console.log(err)
+    }
+
+    const Loginbutton = document.getElementById('loginBtn');
+    Loginbutton.addEventListener('click', async _ => {
+      try {     
+        var email = document.getElementById('email').value;
+        var pass = document.getElementById('password').value;
+
+        var data = {
+          "email": email,
+          "password": pass
+        }
+        const response = await fetch('/login', {
+          method: 'post',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+        var processed_res = await response.json();
+        console.log('Completed!', processed_res.status);
+
+
+        if(processed_res.status==0)
+        {
+          document.getElementById("error").innerHTML = "Incorrect username or password";
+          document.getElementById('password').value="";
+        }
+        else if(processed_res.status==1)
+        {
+          document.getElementById("error").innerHTML = "";
+          localStorage.setItem("bloggingTokenId", processed_res.bloggingTokenId);
+          localStorage.setItem("bloggingTokenStatus", processed_res.status);
+          window.location.href = "/";
+
+        }
+      } catch(err) {
+        console.error(`Error: ${err}`);
+      }
+    });
+
+    const RegisterButton = document.getElementById("RegBtn");
+    RegisterButton.addEventListener('click',()=>
+    {
+        window.location.href = "/register";
+    });
+    

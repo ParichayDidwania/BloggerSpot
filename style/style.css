@@ -1,0 +1,196 @@
+h1 {
+    color: black;
+  }
+
+body{
+  margin: 0px;
+}
+
+div.frame {
+  min-height: 100vh;
+  min-width: 100vh;
+  display: flex;
+  align-items: center;  
+  justify-content: center;
+  background-color:#282828;
+}
+
+div.frame2 {
+  min-height: 100vh;
+  min-width: 100vh;
+  background-color:#282828;
+  display: flex;
+  justify-content: flex-start;
+  align-content: center;
+  flex-direction: column;
+}
+
+div.login {
+  text-align: center;
+  background-color: gray;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.pass
+{
+  margin-top: 20px;
+  font-size: 20px;
+  border-radius: 20px;
+  padding-left: 10px;
+}
+
+.email
+{
+  font-size: 20px;
+  border-radius: 20px;
+  padding-left: 10px;
+}
+
+button.login{
+  margin-top: 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 100px;
+  padding-right: 100px;
+  background-color: #282828;
+  color: white;
+}
+
+button.register{
+  margin-top: 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 55px;
+  padding-right: 55px;
+  background-color:#282828;
+  color: white;
+}
+
+#error{
+
+  color: red;
+}
+
+div.blogs{
+  background-color: #100c08;
+  min-height: 100vh;
+  margin-left: 20%;
+  margin-right: 20%;
+}
+
+div.username {
+  background-color: gray;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+label.username{
+  margin: 10px;
+  font-weight: bold;
+  font-size: 25px;
+}
+
+p.main_username{
+  color: white;
+  font-size: 25px;
+}
+
+p.main_user_post{
+  color: white;
+  font-size: 15px;
+}
+
+div.post{
+  margin: 20px;
+  border: gray;
+  border-style: solid;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+button#logout{
+  max-height: 40px;
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #282828;
+  color: white;
+}
+
+div.comment{
+  margin-top: 10px;
+}
+
+h3.comment_username{
+  display: inline;
+  color: white;
+  font-size: 18px;
+  font-weight: normal;
+
+}
+
+h5.comment_content{
+  display: inline;
+  color: white;
+  font-size: 15px;
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+div.comment_field{
+  margin-top: 15px;
+}
+
+input.comment_field{
+  border-radius: 10px;
+  padding: 5px;
+  min-width: 80%;
+}
+
+button.commentBtn{
+  margin-left: 10px;
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 5px;
+  background-color: #282828;
+  color: white;
+}
+
+div.create_post{
+  padding: 30px;
+  display: flex;
+}
+
+textarea.post_field{
+  resize: none;
+  width: 90%;
+}
+
+button.postbutton{
+  background-color: #282828;
+  color: white;
+}
+
+div.delete{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+button.delete{
+  max-height: 40px;
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: red;
+  color: white;
+}

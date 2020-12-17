@@ -1,0 +1,312 @@
+html
+  head
+    style
+      include ../style/style.css
+  body
+    div.frame2   
+      div.username
+        label.username#username Hi,
+        button(id = "logout", onclick="logout()") Logout
+      div.blogs#blogs
+        div.create_post
+          textarea.post_field#post_field(name="", cols="30", rows="5",placeholder="write something")
+          button(id="postbutton",class="postbutton",onclick="postButtonPress") Post
+                
+        div.post#post
+          div.main_user
+            div.delete
+              p.main_username Richard Hendrics
+              button.delete(post_id = " ",onclick = "deletePost(this)") Delete
+            p.main_user_post hey guys how are you doing?
+          hr
+          div.comment 
+            h3.comment_username Raj 
+            h5.comment_content Not great
+          div.comment_field
+            input(type="text", name="comment",class="comment_field")
+            button(post_id = "abc",class="commentBtn",id = "commentBtn",onclick="commentfun(this.post_id)") Comment
+
+          
+  
+  script.
+
+    if(localStorage.getItem("bloggingTokenStatus")!=1)
+    {
+        window.location.href = '/login';
+    }
+    const Blogs = document.getElementById("blogs")
+    const post_btn = document.getElementById("postbutton");
+    const NameLabel = document.getElementById("username");
+    var name="";
+
+    getUserData();
+    loadingPosts();
+
+    async function loadingPosts(){
+        const response = await fetch('/postinfo', {
+          method: 'get'
+        });
+
+        var processed_res = await response.json();
+
+        Blogs.innerHTML="";
+        Blogs.append(create_post_field())
+        var i;
+        for(i=0;i<processed_res.length;i++)
+        {
+            var post = create_post();
+            var main_post = main_user_content(processed_res[i].username, processed_res[i].user_content,processed_res[i].user_id,processed_res[i]._id);
+            var comment_field_div = create_comment_field(processed_res[i]._id);
+            var break_element = linebreak();
+
+            post.appendChild(main_post);
+            post.appendChild(break_element);
+            var j;
+            for(j=0;j<processed_res[i].comments.length;j++)
+            {
+                var name = processed_res[i].comments[j].name;
+                var content = processed_res[i].comments[j].content;
+                var comment_div = comment_content(name,content);
+
+                post.appendChild(comment_div);
+            }
+            post.appendChild(comment_field_div);
+            Blogs.appendChild(post)
+        }
+
+        
+    }
+
+    async function SendingPost(){
+
+        var post_field = document.getElementById("post_field");
+        var data = {
+          "user_id": localStorage.getItem("bloggingTokenId"),
+          "username": name,
+          "user_content": post_field.value,
+          "comments":[]
+          
+        }
+
+        const response = await fetch('/postinfo', {
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          method: 'post'
+        });
+
+        var processed_res = await response.json();
+        console.log(processed_res);
+        if(processed_res.status==1)
+        {
+            loadingPosts();
+        }        
+    }
+
+    async function getUserData()
+    {
+        var data = {
+          "user_id": localStorage.getItem("bloggingTokenId")
+        }
+
+        const response = await fetch('/userinfo', {
+          method: 'post',
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+
+        var processed_res = await response.json();
+        //console.log(processed_res);
+
+        NameLabel.innerHTML = "Hi, "+processed_res.name;
+        name = processed_res.name;
+    }
+
+
+    async function commentfun(button)
+    {
+        post_id = button.getAttribute("post_id");
+        const content = document.getElementById(post_id);
+        
+        var data = {
+          "post_id": post_id,
+          "name":name,
+          "content": content.value
+        }
+
+        const response = await fetch('/postinfo', {
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          method: 'put'
+        });
+        var processed_res = await response.json();
+        if(processed_res.status==1)
+        {
+            loadingPosts();
+        }
+        
+    }
+
+    function postButtonPress(){
+        SendingPost();        
+    }
+
+    async function deletePost(button){
+
+        var post_id = button.getAttribute("post_id");
+        console.log(post_id);
+
+        var data = {
+          "post_id": post_id,
+        }
+
+        const response = await fetch('/postinfo', {
+          headers:{
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          method: 'delete'
+        });
+        var processed_res = await response.json();
+        if(processed_res.status==1)
+        {
+            loadingPosts();
+        }
+    }
+
+    function create_post()
+    {
+        var post = document.createElement("div");
+        post.className = 'post';
+
+        return post;
+    }
+
+    function main_user_content(name, message, user_id, post_id)
+    {
+        
+        var main_user_div = document.createElement("div");
+        main_user_div.className = 'main_user';
+
+        var NameAndDelete_div = document.createElement("div");
+        NameAndDelete_div.className = 'delete';
+
+        var main_username = document.createElement("p");
+        main_username.className = 'main_username';
+        var username = document.createTextNode(name);
+        main_username.appendChild(username);
+
+        NameAndDelete_div.appendChild(main_username);
+
+        if(user_id == localStorage.getItem("bloggingTokenId"))
+        {
+            var delete_button = document.createElement("button");
+            delete_button.className = "delete"
+            delete_button.setAttribute("onclick","deletePost(this)");
+            delete_button.setAttribute("post_id",post_id);
+            var node = document.createTextNode("Delete");
+            delete_button.appendChild(node);
+            //delete_button.setAttribute("onclick",);
+
+            NameAndDelete_div.appendChild(delete_button);
+        }
+
+        var main_user_post = document.createElement("p");
+        main_user_post.className = 'main_user_post';
+        var user_post = document.createTextNode(message);        
+        main_user_post.appendChild(user_post);
+
+        main_user_div.appendChild(NameAndDelete_div);
+        main_user_div.appendChild(main_user_post);
+
+        return main_user_div;     
+
+    }
+
+    function create_comment_field(post_id)
+    {
+        var comment_field_div = document.createElement("div");
+        comment_field_div.className = "comment_field";
+
+        var comment_field_text = document.createElement("input");
+        comment_field_text.className = "comment_field";
+        comment_field_text.id = post_id;
+
+        var new_comment_btn = document.createElement("button");
+        var comment_text = document.createTextNode("Comment");
+        new_comment_btn.className = "commentBtn";
+        new_comment_btn.id = "commentBtn";
+        new_comment_btn.setAttribute("onclick","commentfun(this)");
+        new_comment_btn.setAttribute("post_id",post_id);
+        new_comment_btn.appendChild(comment_text);
+
+        comment_field_div.appendChild(comment_field_text);
+        comment_field_div.appendChild(new_comment_btn);
+
+        return comment_field_div;
+    }
+
+    function comment_content(name,message)
+    {
+        var comment_div = document.createElement("div");
+        comment_div.className = 'comment';
+
+        var comment_username = document.createElement("h3");
+        comment_username.className = 'comment_username';
+        var username = document.createTextNode(name);
+        comment_username.appendChild(username);
+
+        var comment_content = document.createElement("h5");
+        comment_content.className = 'comment_content';
+        var content = document.createTextNode(message);
+        comment_content.appendChild(content);
+
+        comment_div.appendChild(comment_username);
+        comment_div.appendChild(comment_content);
+
+        return comment_div;
+    }
+
+    function linebreak(){
+
+        var break_element = document.createElement("hr");
+        return break_element;
+    }
+    
+    function create_post_field()
+    {
+        
+        var post_div = document.createElement("div")
+        post_div.className = "create_post"
+
+        
+        var textarea = document.createElement("textarea");
+        textarea.setAttribute("class", "post_field");
+        textarea.setAttribute("id", "post_field");
+        textarea.setAttribute("cols", "30");
+        textarea.setAttribute("rows", "5");
+        textarea.setAttribute("placeholder", "write something");
+
+        var post_button = document.createElement("button");
+        post_button.id = "postbutton";
+        post_button.onclick = postButtonPress;
+        post_button.className = "postbutton";
+        var content = document.createTextNode("Post");
+        post_button.appendChild(content);
+
+        post_div.appendChild(textarea)
+        post_div.appendChild(post_button)
+
+        return post_div;
+    }
+
+    function logout(){
+        localStorage.setItem("bloggingTokenStatus", 2);
+        window.location.href = "/login";
+    }
+    
