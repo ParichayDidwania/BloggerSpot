@@ -1,5 +1,10 @@
 html
   head
+    script.
+      if(localStorage.getItem("bloggingTokenStatus")!=1)
+      {
+        window.location.href = '/login';
+      }
     style
       include ../style/style.css
   body
@@ -7,8 +12,8 @@ html
       div.username
         label.username#username Hi,
         button(id = "logout", onclick="logout()") Logout
-      div.blogs#blogs
-        div.create_post
+      div.blogs#blogs        
+    //  div.create_post
           textarea.post_field#post_field(name="", cols="30", rows="5",placeholder="write something")
           button(id="postbutton",class="postbutton",onclick="postButtonPress") Post
                 
@@ -29,11 +34,7 @@ html
           
   
   script.
-
-    if(localStorage.getItem("bloggingTokenStatus")!=1)
-    {
-        window.location.href = '/login';
-    }
+    
     const Blogs = document.getElementById("blogs")
     const post_btn = document.getElementById("postbutton");
     const NameLabel = document.getElementById("username");

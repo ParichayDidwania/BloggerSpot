@@ -1,5 +1,15 @@
 html
   head
+    script.
+      try{
+      if(localStorage.getItem("bloggingTokenStatus")==1)
+        {
+            window.location.href = '/'
+        }      
+      }catch(err)
+        {
+          console.log(err)
+        }
     style
       include ../style/style.css
   body
@@ -17,17 +27,6 @@ html
         p#error
   
   script.
-
-    try{
-      if(localStorage.getItem("bloggingTokenStatus")==1)
-      {
-          window.location.href = '/'
-      }      
-    }catch(err)
-    {
-      console.log(err)
-    }
-
     const Loginbutton = document.getElementById('loginBtn');
     Loginbutton.addEventListener('click', async _ => {
       try {     
