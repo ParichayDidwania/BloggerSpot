@@ -23,7 +23,7 @@ router.get('/',(req,res)=>
     res.render('register',{});
 })
 
-router.use('/',(req,res,next)=>{
+router.route('/',(req,res,next)=>{
     if((req.body.email).indexOf("@")==-1)
     {
         res.send({
@@ -101,5 +101,10 @@ function SendToken(req,res)
         }
     });
 }
+
+router.get("*",(req,res)=>{
+    res.send("URL NOT FOUND");
+})
+
 
 module.exports = router;

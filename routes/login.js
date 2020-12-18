@@ -21,19 +21,22 @@ router.get('/', function (req, res) {
 })
 
 
-router.use('/',(req,res,next)=>{
+router.route('/',(req,res,next)=>{
     if(req.body.email!=null && req.body.password!=null)
     {
+        console.log(req.path)
         next();
     }
     else
     {
+        console.log(req.path)
         res.send({
             message : "Credentials not provided",
             status : 0
         });
     }
 })
+
 
 router.post('/',async (req,res)=>{
     console.log(req.body);
@@ -76,6 +79,10 @@ router.post('/',async (req,res)=>{
         }
     })
     //res.send("OKAY")
+})
+
+router.get("*",(req,res)=>{
+    res.send("URL NOT FOUND");
 })
 
 module.exports = router;

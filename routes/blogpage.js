@@ -131,4 +131,9 @@ router.delete('/postinfo',(req,res)=>{
     })
 })
 
+router.get("*",(req,res)=>{
+    res.send("URL NOT FOUND");
+})
+
+
 module.exports = router;

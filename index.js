@@ -12,6 +12,9 @@ app.set('views','./templates');
 app.use('/register',register);
 app.use('/login',login);
 app.use('/',blogpage);
+app.use('*',(req,res)=>{
+    res.send("URL NOT FOUND");
+})
 
 
 
