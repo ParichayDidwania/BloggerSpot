@@ -20,6 +20,21 @@ router.get('/', function (req, res) {
     res.render('login', {})
 })
 
+
+router.use('/',(req,res,next)=>{
+    if(req.body.email!=null && req.body.password!=null)
+    {
+        next();
+    }
+    else
+    {
+        res.send({
+            message : "Credentials not provided",
+            status : 0
+        });
+    }
+})
+
 router.post('/',async (req,res)=>{
     console.log(req.body);
 
@@ -40,8 +55,8 @@ router.post('/',async (req,res)=>{
                 {
                     res.send(
                         {
-                            bloggingTokenId: docs[0]._id,
-                            status: 0
+                            status: 0,
+                            message : "Incorrect username or password"
                         }
                     )
                 }
@@ -54,7 +69,8 @@ router.post('/',async (req,res)=>{
         else
         {
             res.send(JSON.stringify({
-                status: 0
+                status: 0,
+                message : "Incorrect username or password"
             }))
             console.log("Incorrect Username");
         }
