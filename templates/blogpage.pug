@@ -49,33 +49,37 @@ html
         });
 
         var processed_res = await response.json();
-
-        Blogs.innerHTML="";
-        Blogs.append(create_post_field())
-        var i;
-        for(i=0;i<processed_res.length;i++)
+        if(processed_res[processed_res.length-1].status==1)
         {
-            var post = create_post();
-            var main_post = main_user_content(processed_res[i].username, processed_res[i].user_content,processed_res[i].user_id,processed_res[i]._id);
-            var comment_field_div = create_comment_field(processed_res[i]._id);
-            var break_element = linebreak();
+          Blogs.innerHTML="";
+          Blogs.append(create_post_field())
+          var i;
+          for(i=0;i<processed_res.length-1;i++)
+          {
+              var post = create_post();
+              var main_post = main_user_content(processed_res[i].username, processed_res[i].user_content,processed_res[i].user_id,processed_res[i]._id);
+              var comment_field_div = create_comment_field(processed_res[i]._id);
+              var break_element = linebreak();
 
-            post.appendChild(main_post);
-            post.appendChild(break_element);
-            var j;
-            for(j=0;j<processed_res[i].comments.length;j++)
-            {
-                var name = processed_res[i].comments[j].name;
-                var content = processed_res[i].comments[j].content;
-                var comment_div = comment_content(name,content);
+              post.appendChild(main_post);
+              post.appendChild(break_element);
+              var j;
+              for(j=0;j<processed_res[i].comments.length;j++)
+              {
+                  var name = processed_res[i].comments[j].name;
+                  var content = processed_res[i].comments[j].content;
+                  var comment_div = comment_content(name,content);
 
-                post.appendChild(comment_div);
-            }
-            post.appendChild(comment_field_div);
-            Blogs.appendChild(post)
+                  post.appendChild(comment_div);
+              }
+              post.appendChild(comment_field_div);
+              Blogs.appendChild(post)
+          }
         }
-
-        
+        else
+        {
+          window.alert("Connection Error!");
+        }        
     }
 
     async function SendingPost(){
@@ -102,6 +106,10 @@ html
         if(processed_res.status==1)
         {
             loadingPosts();
+        }
+        else
+        {
+          window.alert("Connection Error!");
         }        
     }
 
@@ -122,8 +130,16 @@ html
         var processed_res = await response.json();
         //console.log(processed_res);
 
-        NameLabel.innerHTML = "Hi, "+processed_res.name;
-        name = processed_res.name;
+        if(processed_res.status==1)
+        {
+            NameLabel.innerHTML = "Hi, "+processed_res.name;
+            name = processed_res.name;
+        }
+        else
+        {
+          window.alert("Connection Error!");
+        }
+        
     }
 
 
@@ -149,6 +165,10 @@ html
         if(processed_res.status==1)
         {
             loadingPosts();
+        }
+        else
+        {
+          window.alert("Connection Error!");
         }
         
     }
@@ -177,6 +197,10 @@ html
         if(processed_res.status==1)
         {
             loadingPosts();
+        }
+        else
+        {
+          window.alert("Connection Error!");
         }
     }
 
@@ -212,7 +236,6 @@ html
             delete_button.setAttribute("post_id",post_id);
             var node = document.createTextNode("Delete");
             delete_button.appendChild(node);
-            //delete_button.setAttribute("onclick",);
 
             NameAndDelete_div.appendChild(delete_button);
         }

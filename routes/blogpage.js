@@ -25,11 +25,22 @@ router.get('/',(req,res)=>{
 
 router.post('/userinfo',(req,res)=>{
     user.find({_id: req.body.user_id},(err,docs)=>{
-        res.send(
-            {
-                'name': docs[0].email
-            }
-        )
+        if(!err)
+        {
+            res.send(
+                {
+                    'name': docs[0].email,
+                    'status': 1
+                }
+            )
+        }
+        else{
+            res.send(
+                {
+                    'status': 0
+                }
+            )
+        }
     });
 })
 
@@ -37,8 +48,17 @@ router.get('/postinfo',(req,res)=>{
     posts.find({},(err,docs)=>{
         if(!err)
         {
+            docs.push({status:1});
             res.send(docs);
             console.log(docs);
+        }
+        else
+        {
+            res.send(
+                {
+                    status : 0
+                }
+            )
         }
     })
 })
@@ -50,7 +70,14 @@ router.post('/postinfo',(req,res)=>{
         res.send({
             status:1
         })
-    });
+    })
+    .catch((err)=>{
+        res.send(
+            {
+                status : 0
+            }
+        )
+    })
 })
 
 router.put('/postinfo',(req,res)=>{
@@ -72,6 +99,13 @@ router.put('/postinfo',(req,res)=>{
         })
 
     })
+    .catch((err)=>{
+        res.send(
+            {
+                status : 0
+            }
+        )
+    })
 
 });
 
@@ -83,6 +117,14 @@ router.delete('/postinfo',(req,res)=>{
             res.send(
                 {
                     status:1
+                }
+            )
+        }
+        else
+        {
+            res.send(
+                {
+                    status:0
                 }
             )
         }

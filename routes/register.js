@@ -23,9 +23,30 @@ router.get('/',(req,res)=>
     res.render('register',{});
 })
 
+router.use('/',(req,res,next)=>{
+    if((req.body.email).indexOf("@")==-1)
+    {
+        res.send({
+            status:0,
+            message:"Enter a valid email Id!"
+        })
+    }
+    else if((req.body.password).length<5)
+    {
+        res.send({
+            status:0,
+            message:"Password should be minimum 5 characters!"
+        })
+    }
+    else
+    {
+        next();
+    }
+
+})
+
 router.post('/',async (req,res)=>{
     console.log(req.body);
-
     user.find({email: req.body.email},async (err,docs)=>{
         if(docs.length==0)
         {
